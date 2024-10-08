@@ -29,12 +29,19 @@ ptyProcess.onData((data) => {
 });
 
 io.on("connection", (socket) => {
-  console.log(`socket connected with id :::> ${socket.id}`);
+  console.log(`socket connected with id ::> ${socket.id}`);
 
   // setting up terminal write socket logic, i.e whenever user writes something just write the same command to the pty terminal instance.
   socket.on("terminal:write", (data) => {
     console.log("Term", data);
-    ptyProcess.write(data + "\r");
+    // ptyProcess.write(data + "\r");
+    if (data.endsWith("\r")) {
+      // If data ends with Enter (or '\r'), just write it directly
+      ptyProcess.write(data);
+    } else {
+      // Otherwise, write the data without adding '\r' (until an Enter is detected)
+      ptyProcess.write(data);
+    }
   });
 });
 
