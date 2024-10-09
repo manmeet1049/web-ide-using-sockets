@@ -12,3 +12,14 @@ body{
     display: flex;
     flex-direction: row;
 }
+
+li{
+    list-style: none;
+    margin-left: -3px;
+}
+ul{
+    margin-left: -20px;
+}
+.file-node{
+    cursor: pointer;
+}

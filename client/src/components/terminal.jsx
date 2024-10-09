@@ -27,6 +27,9 @@ export default function Terminal() {
     socket.on("terminal:data", (data) => {
       term.write(data);
     });
+    return () =>{
+      socket.on("terminal:data")
+    }
   }, []);
 
   return <div ref={terminalRef} id="terminal"></div>;
