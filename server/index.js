@@ -29,9 +29,9 @@ app.use(cors());
 
 io.attach(server);
 
-chokidar.watch('./user').on('all',(event,path)=>{
-  io.emit("file:refresh", path)
-})
+chokidar.watch("./user").on("all", (event, path) => {
+  io.emit("file:refresh", path);
+});
 
 // emiting the data (eg: it can be reults of a command execution)
 ptyProcess.onData((data) => {
@@ -40,6 +40,12 @@ ptyProcess.onData((data) => {
 
 io.on("connection", (socket) => {
   console.log(`socket connected with id ::> ${socket.id}`);
+
+  socket.emit("file:refresh");
+
+  socket.on("file:change", async ({ content, path }) => {
+    await fs.writeFile(`./user${path}`, content);
+  });
 
   // setting up terminal write socket logic, i.e whenever user writes something just write the same command to the pty terminal instance.
   socket.on("terminal:write", (data) => {
@@ -56,6 +62,13 @@ app.get("/files", async (req, res) => {
   const fileTree = await generateFileTree("./user");
 
   return res.json({ tree: fileTree });
+});
+
+app.get("/files/content", async (req, res) => {
+  const path = req.query.path;
+  const content = await fs.readFile(`./user${path}`, "utf-8");
+
+  return res.json({ content });
 });
 
 server.listen(9000, () => console.log(`🐋 server running on port 9000`));
