@@ -4,4 +4,4 @@
 
 ## Core features: Interactive terminal, a code editor, file-explorer, autosaving the code.
 
-## tech-Stack used: NodeJS, ReactJS.
+## Tech-Stack used: NodeJS, ReactJS.
